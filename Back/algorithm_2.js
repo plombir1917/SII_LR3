@@ -61,26 +61,32 @@ function B_Stroke(A_prime, R) { //100% верно
     return B
 }
 
-function Aggregation(B_n_stroke) {
+function Aggregation(R_n) {
     let agg = []
-    for (let i = 0; i < B_n_stroke[0].length; i++) {
-        let tmp = []
-        for (let j = 0; j < B_n_stroke.length; j++) {
-            tmp.push(B_n_stroke[j][i])
-        }
-        agg.push(Math.max(...tmp))
+    for (let i = 0; i < R_n[0].length; i++) {
+        agg.push([])
     }
+        for (let j = 0; j < R_n[0].length; j++) {
+            for (let k = 0; k <R_n[0][j].length ; k++) {
+                let max_el =R_n[0][j][k]
+                for (let l = 0; l < R_n.length; l++) {
+                    if(R_n[l][j][k]>max_el){
+                        max_el=R_n[l][j][k]
+                    }
+                }
+                agg[j].push(max_el)
+            }
+
+        }
     return agg
 }
 
 function main() {
     let implications = 'Mamdani'
-    let A_prime = input.financing.definitions.critical.value
+    let A_prime = input.financing.definitions.many.value
     calcRules(implications)
-    for (let i = 0; i < R_n.length; i++) {
-        B_n_stroke.push(B_Stroke(A_prime, R_n[i]))
-    }
-    console.log(Aggregation(B_n_stroke))
+    let R= Aggregation(R_n)
+    console.log(B_Stroke(A_prime, R))
 }
 
 main()

@@ -75,7 +75,7 @@ function Aggregation(B_n_stroke) {
 
 function main() {
     let implications = 'Mamdani'
-    let A_prime = input.financing.definitions.critical.value
+    let A_prime = input.financing.definitions.many.value
     calcRules(implications)
     for (let i = 0; i < R_n.length; i++) {
         B_n_stroke.push(B_Stroke(A_prime, R_n[i]))

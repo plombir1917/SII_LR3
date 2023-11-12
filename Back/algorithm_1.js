@@ -5,7 +5,7 @@ let {rules} = JSON.parse(fs.readFileSync('rules.json', 'utf8'));
 let R_n = []
 let B_n_stroke = []
 
-function Mamdany(A, B) {
+function Mamdani(A, B) {
     let R = []
     for (let i = 0; i < A.length; i++) {
         R.push([])
@@ -32,10 +32,17 @@ function Larsen(A, B) {
 }
 
 
-function calcRules() {
-    rules.forEach((rule, index) => {
-        R_n.push(Mamdany(input.financing.definitions[rule.if.financing].value, input.degree_satisfaction.definitions[rule.then.degree_satisfaction].value))
-    })
+function calcRules(implication) {
+    if (implication === 'Mamdani'){
+        rules.forEach((rule, index) => {
+            R_n.push(Mamdani(input.financing.definitions[rule.if.financing].value, input.degree_satisfaction.definitions[rule.then.degree_satisfaction].value))
+        })
+    }
+    if (implication === 'Larsen'){
+        rules.forEach((rule, index) => {
+            R_n.push(Larsen(input.financing.definitions[rule.if.financing].value, input.degree_satisfaction.definitions[rule.then.degree_satisfaction].value))
+        })
+    }
 }
 
 function B_Stroke(A_prime, R) { //100% верно
@@ -67,9 +74,9 @@ function Aggregation(B_n_stroke) {
 }
 
 function main() {
-
+    let implications = 'Mamdani'
     let A_prime = input.financing.definitions.critical.value
-    calcRules()
+    calcRules(implications)
     for (let i = 0; i < R_n.length; i++) {
         B_n_stroke.push(B_Stroke(A_prime, R_n[i]))
     }
@@ -77,5 +84,3 @@ function main() {
 }
 
 main()
-// console.log(R_n)
-// console.table(Larsen(input.financing.definitions.not_enough.value,input.degree_satisfaction.satisfactory.value))

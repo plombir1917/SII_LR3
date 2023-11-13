@@ -1,6 +1,4 @@
 const fs = require('fs')
-let input = JSON.parse(fs.readFileSync('input.json', 'utf8'));
-let {rules} = JSON.parse(fs.readFileSync('rules.json', 'utf8'));
 
 let R_n = []
 let B_n_stroke = []
@@ -32,7 +30,7 @@ function Larsen(A, B) {
 }
 
 
-function calcRules(implication) {
+function calcRules(implication,input,rules) {
     if (implication === 'Mamdani'){
         rules.forEach((rule, index) => {
             R_n.push(Mamdani(input.financing.definitions[rule.if.financing].value, input.degree_satisfaction.definitions[rule.then.degree_satisfaction].value))
@@ -81,12 +79,15 @@ function Aggregation(R_n) {
     return agg
 }
 
-function main() {
-    let implications = 'Mamdani'
-    let A_prime = input.financing.definitions.many.value
-    calcRules(implications)
-    let R= Aggregation(R_n)
-    console.log(B_Stroke(A_prime, R))
-}
 
-main()
+
+module.exports={
+    Main:function main(params) {
+        let A_prime = params.input.financing.definitions[params.definition].value
+        let B_value = params.input.degree_satisfaction.value
+        calcRules(params.fuzzy,params.input,params.rules)
+        let R= Aggregation(R_n)
+        let res = B_Stroke(A_prime, R)
+        return(res.map((r,i)=>`${B_value[i]}/${r}+`)).join('')
+    }
+}

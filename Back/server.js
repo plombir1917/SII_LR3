@@ -42,6 +42,7 @@ app.post('/',(req,res)=>{
         let input = JSON.parse(fs.readFileSync('input.json', 'utf8'));
         let {rules} = JSON.parse(fs.readFileSync('rules.json', 'utf8'));
         params={
+            type:req.body.type,
             input:input,
             rules:rules,
             fuzzy:req.body.fuzzy,

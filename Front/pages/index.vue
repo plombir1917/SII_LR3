@@ -36,7 +36,7 @@
     <button @click="calc()">Рассчиать</button>
     <div class="result">
       <h3>Уровень удволетворённости населения</h3>
-      <p>{{res}}</p>
+      <p>{{res.substring(0,res.length-1)}}</p>
     </div>
   </main>
 </template>

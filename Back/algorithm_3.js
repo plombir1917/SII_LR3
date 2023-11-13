@@ -59,11 +59,23 @@ module.exports = {
             let j = 0
             for (key in rules[i].if) {
                 let val = rules[i].if[key]
-                A_n[j].push(input.input[key].definitions[val].value)
+                if (params.type !=='one'){
+                    A_n[j].push(input.input[key].definitions[val].value)
+                }
+                else{
+                    A_n[j].push(input[key].definitions[val].value)
+                }
                 j++
             }
         }
-        let A_n_stroke = params.definition
+        let A_n_stroke
+        if (params.type==='one'){
+            A_n_stroke = [params.input.financing.definitions[params.definition].value]
+        }
+        else{
+            A_n_stroke = params.definition
+        }
+
         // let A_n_stroke = [
         //     [0,
         //         0,
@@ -85,7 +97,7 @@ module.exports = {
         }
         let alphas = calcBackground(A_n, A_n_stroke)
         let b_stroke = B_stroke(alphas, B_n)
-        return(Aggregation(b_stroke))
+        return(Aggregation(b_stroke)).map((r,i)=>`${input.degree_satisfaction.value[i]}/${r}+`).join('')
 
     }
 }

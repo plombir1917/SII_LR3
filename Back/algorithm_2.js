@@ -88,6 +88,15 @@ module.exports={
         calcRules(params.fuzzy,params.input,params.rules)
         let R= Aggregation(R_n)
         let res = B_Stroke(A_prime, R)
-        return(res.map((r,i)=>`${B_value[i]}/${r}+`)).join('')
+        let numerator=0
+        let denominator = 0
+        for (let i = 0; i < res.length; i++) {
+            numerator +=res[i]*B_value[i]
+            denominator +=res[i]
+        }
+        console.log(numerator/denominator)
+
+        return numerator/denominator
+        // return(res.map((r,i)=>`${B_value[i]}/${r}+`)).join('')
     }
 }

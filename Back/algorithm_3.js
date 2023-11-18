@@ -26,7 +26,7 @@ function B_stroke(alphas, B_n) {
     return B_n_stroke
 }
 
-function calcBackground(A_n, A_n_stroke) {
+function calcBackground(A_n, A_n_stroke,fuzzy) {
     function minSet(A, A_stroke) {
         let min = []
         for (let i = 0; i < A.length; i++) {
@@ -42,7 +42,12 @@ function calcBackground(A_n, A_n_stroke) {
             max.push(Math.max(...minSet(A_n[j][i], A_n_stroke[j])))
         }
         // console.log(max)
-        alpha.push(Math.min(...max))
+        if(fuzzy === "Mamdani"){
+            alpha.push(Math.min(...max))
+        }
+        else{
+            alpha.push(max.reduce((acc, rec) => acc * rec))
+        }
     }
     return (alpha)
 }
@@ -75,16 +80,6 @@ module.exports = {
         else{
             A_n_stroke = params.definition
         }
-
-        // let A_n_stroke = [
-        //     [0,
-        //         0,
-        //         0.3,
-        //         0.4,
-        //         0.7,
-        //         0.9,
-        //         1]
-        // ]
         let B_n = []
 
         for (let i = 0; i < rules.length; i++) {
@@ -95,9 +90,18 @@ module.exports = {
                 j++
             }
         }
-        let alphas = calcBackground(A_n, A_n_stroke)
+        let alphas = calcBackground(A_n, A_n_stroke,params.fuzzy)
         let b_stroke = B_stroke(alphas, B_n)
-        return(Aggregation(b_stroke)).map((r,i)=>`${input.degree_satisfaction.value[i]}/${r}+`).join('')
+        let result =Aggregation(b_stroke)
+        let numerator=0
+        let denominator = 0
+        for (let i = 0; i < result.length; i++) {
+            numerator += input.degree_satisfaction.value[i]*result[i]
+            denominator +=result[i]
+        }
+        console.log(numerator/denominator)
+
+        return numerator/denominator
 
     }
 }

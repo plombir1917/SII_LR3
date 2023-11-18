@@ -82,7 +82,16 @@ module.exports ={
         for (let i = 0; i < R_n.length; i++) {
             B_n_stroke.push(B_Stroke(A_prime, R_n[i]))
         }
-        return (Aggregation(B_n_stroke).map((b,index)=>B_value[index]+'/'+b+'+').join(''))
+        let numerator=0
+        let denominator = 0
+        let agg  = Aggregation(B_n_stroke)
+        for (let i = 0; i < agg.length; i++) {
+            numerator +=B_value[i]*agg[i]
+            denominator +=agg[i]
+        }
+        console.log(numerator/denominator)
+        return numerator/denominator
+        // return (Aggregation(B_n_stroke).map((b,index)=>B_value[index]+'/'+b+'+').join(''))
     }
 }
 

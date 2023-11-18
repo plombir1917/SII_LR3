@@ -24,7 +24,7 @@ app.get('/',(req,res)=>{
         let names = []
         for(key in input.input){
             tmp_input.push([])
-            names.push(input.input[key].name)
+            names.push({en_name:key,name:input.input[key].name})
             for(child in input.input[key].definitions){
                 tmp_input[tmp_input.length-1].push(input.input[key].definitions[child])
                 tmp_input[tmp_input.length-1][tmp_input[tmp_input.length-1].length -1].en_name = child
@@ -32,6 +32,7 @@ app.get('/',(req,res)=>{
             }
         }
         res.json({
+            inputClear: input,
             input:tmp_input,
             degree_satisfaction: input.degree_satisfaction,
             rules:rules,
@@ -85,6 +86,18 @@ app.post('/add-rules',(req,res)=>{
     if (req.body.type === 'multiple'){
         let {rules} = JSON.parse(fs.readFileSync('rulesMultiple.json', 'utf8'));
         rules.push(req.body.json)
+        fs.writeFileSync('rulesMultiple.json', JSON.stringify({rules}))
+    }
+})
+app.post('/delete-rules',(req,res)=>{
+    if (req.body.type === 'one'){
+        let {rules} = JSON.parse(fs.readFileSync('rules.json', 'utf8'));
+        rules.splice(req.body.index,1)
+        fs.writeFileSync('rules.json', JSON.stringify({rules}))
+    }
+    if (req.body.type === 'multiple'){
+        let {rules} = JSON.parse(fs.readFileSync('rulesMultiple.json', 'utf8'));
+        rules.splice(req.body.index,1)
         fs.writeFileSync('rulesMultiple.json', JSON.stringify({rules}))
     }
 })

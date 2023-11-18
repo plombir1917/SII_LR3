@@ -9,7 +9,7 @@
     </div>
     <div v-else>
       <select class="multiple-select" v-for="(set,i) in input" v-if="i!=='degree_satisfaction'" v-model="selectDefinitions[i]" :name="i" :id="i">
-        <option v-show="names[i]" disabled selected value="">{{ `Выберите ${names[i]}` }}</option>
+        <option v-show="names[i]" disabled selected value="">{{ `Выберите ${names[i]?.name}` }}</option>
         <option :for="i" v-for="(d,index) in set" :value="d.value">{{d.name}}</option>
       </select>
     </div>
@@ -53,11 +53,12 @@
       <button class="add-rules" @click="addRules()">Добавить</button>
     </div>
     <div v-else class="edit">
+      <p>Добавить правило</p>
       ЕСЛИ
       <div v-for="(set,i) in input">
-        {{names[i]}} =
+        {{names[i]?.name}} =
         <select class="multiple-select" v-if="i!=='degree_satisfaction'" v-model="add_rules_if_multiple[i]" :name="i" :id="i">
-          <option v-show="names[i]" disabled selected value="">{{ `Выберите ${names[i]}` }}</option>
+          <option v-show="names[i]" disabled selected value="">{{ `Выберите ${names[i]?.name}` }}</option>
           <option :for="i" v-for="(d,index) in set" :value="d.en_name">{{d.name}}</option>
         </select>
       </div>
@@ -66,7 +67,12 @@
       <option v-for="(d,index) in degree_satisfaction.definitions" :value="index">{{d.name}}</option>
     </select> <br>
       <button class="add-rules" @click="addRules()">Добавить</button>
-
+    </div>
+    <div v-if="type==='one'" class="rules">
+      <div  v-for="(rule,i) in rules" ><p>ЕСЛИ Уровень финансирования = {{input.financing.definitions[rule.if.financing].name}} ТО Уровень удволетворённости населения = {{input.degree_satisfaction.definitions[rule.then.degree_satisfaction].name}}</p> <button @click="deleteRules(i)">Удалить</button></div>
+    </div>
+    <div v-else class="rules">
+      <div  v-for="(rule,i) in rules" ><p> ЕСЛИ <span v-if="inputClear?.input" v-for="(set,key,i) in rule.if">{{inputClear?.input[key]?.name}} = {{inputClear?.input[key].definitions[set].name}} {{i === Object.keys(rule.if).length-1?' ':'И'}} </span> ТО <span v-if="inputClear" v-for="(set,key,i) in rule.then">{{inputClear[key]?.name}} = {{inputClear[key].definitions[set].name}} </span>  </p> <button @click="deleteRules(i)">Удалить</button></div>
     </div>
   </main>
 </template>
@@ -77,7 +83,7 @@ export default {
     return{
       fuzzy:'Mamdani',
       algorithm:"individual",
-      selectDefinitions:'',
+      selectDefinitions:[],
       type:'one',
       res:'',
       input:{},
@@ -88,7 +94,8 @@ export default {
         then:''
       },
       add_rules_if_multiple:[],
-      degree_satisfaction:''
+      degree_satisfaction:'',
+      inputClear:''
     }
   },
   watch:{
@@ -108,7 +115,6 @@ export default {
         this.$set(this.$data, 'input', {})
         this.$set(this.$data, 'rules', {})
         await this.getAll()
-        console.log(this.input)
         for (let i = 0; i < this.input.length; i++) {
           this.selectDefinitions.push([])
           this.add_rules_if_multiple.push([])
@@ -117,13 +123,17 @@ export default {
     }
   },
   methods:{
+    async deleteRules(i){
+      await this.$axios.post('http://localhost:3001/delete-rules',{type:this.type, index:i})
+      await this.getAll()
+    },
     async getAll(){
       const {data} = await this.$axios.get('http://localhost:3001',{params:{type:this.type}})
-      await console.log(data)
       await this.$set(this.$data,'input', data.input)
       await this.$set(this.$data,'rules', data.rules)
       await data.names? this.names =data.names:''
       await data.degree_satisfaction? this.degree_satisfaction =data.degree_satisfaction:''
+      await data.inputClear? this.inputClear =data.inputClear:''
     },
     async calc(){
       if (this.selectDefinitions) {
@@ -166,6 +176,7 @@ export default {
           json:obj,
         })
       }
+      await this.getAll()
     }
   },
   mounted() {
@@ -210,6 +221,7 @@ main >div{
   margin: 0 4px;
 }
 .edit{
+  width: 100%;
   padding: 10px;
   border-top: 1px #131313 solid;
 }
@@ -224,5 +236,10 @@ button.add-rules{
   width: 100%;
   padding: 4px 0;
   margin-top: 16px;
+}
+.rules div{
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
 }
 </style>

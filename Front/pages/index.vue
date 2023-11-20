@@ -74,6 +74,32 @@
     <div v-else class="rules">
       <div  v-for="(rule,i) in rules" ><p> ЕСЛИ <span v-if="inputClear?.input" v-for="(set,key,i) in rule.if">{{inputClear?.input[key]?.name}} = {{inputClear?.input[key].definitions[set].name}} {{i === Object.keys(rule.if).length-1?' ':'И'}} </span> ТО <span v-if="inputClear" v-for="(set,key,i) in rule.then">{{inputClear[key]?.name}} = {{inputClear[key].definitions[set].name}} </span>  </p> <button @click="deleteRules(i)">Удалить</button></div>
     </div>
+    <div v-if="type==='one'" class="data">
+      <div>
+        <p>Финансирование</p>
+        {{input?.financing?.value}}
+        <p v-for="el in input?.financing?.definitions">{{el.name}} – {{el.value}}</p>
+      </div>
+      <div>
+        <div>
+          <p>Уровень удволетворённости населения</p>
+          {{input?.degree_satisfaction?.value}}
+          <p v-for="el in input?.degree_satisfaction?.definitions">{{el.name}} – {{el.value}}</p>
+        </div>
+      </div>
+    </div>
+    <div v-else class="data">
+      <div v-for="inp in inputClear.input">
+        <p>{{ inp.name }}</p>
+        {{inp?.value}}
+        <p v-for="el in inp?.definitions">{{el.name}} – {{el.value}}</p>
+      </div>
+      <div>
+        <p>{{ inputClear.degree_satisfaction?.name }}</p>
+        {{inputClear.degree_satisfaction?.value}}
+        <p v-for="el in inputClear.degree_satisfaction?.definitions">{{el.name}} – {{el.value}}</p>
+      </div>
+    </div>
   </main>
 </template>
 
@@ -95,7 +121,13 @@ export default {
       },
       add_rules_if_multiple:[],
       degree_satisfaction:'',
-      inputClear:''
+      inputClear:'',
+      add_set:{
+        for:'',
+        name:'',
+        en_name:'',
+        value:'',
+      }
     }
   },
   watch:{
@@ -241,5 +273,11 @@ button.add-rules{
   display: flex;
   gap: 20px;
   margin-top: 8px;
+}
+.data{
+  width: 100%;
+  display: flex;
+  gap: 40px;
+  justify-content: center;
 }
 </style>

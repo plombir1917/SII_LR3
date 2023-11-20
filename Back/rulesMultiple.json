@@ -1,1 +1,64 @@
-{"rules":[{"if":{"financing":"not_enough","criminal":"very_high","vvp":"low"},"then":{"degree_satisfaction":"terribly"}},{"if":{"financing":"not_enough","criminal":"low","vvp":"average"},"then":{"degree_satisfaction":"satisfactory"}},{"if":{"financing":"very_good","criminal":"low","vvp":"low"},"then":{"degree_satisfaction":"satisfactory"}},{"if":{"financing":"very_good","criminal":"low","vvp":"very_high"},"then":{"degree_satisfaction":"very_good"}},{"if":{"financing":"very_good","criminal":"very_high","vvp":"very_high"},"then":{"degree_satisfaction":"bad"}},{"if":{"financing":"little","criminal":"high","vvp":"very_high"},"then":{"degree_satisfaction":"very_good"}}]}
+{
+  "rules": [
+    {
+      "if": {
+        "financing": "not_enough",
+        "criminal": "very_high",
+        "vvp": "low"
+      },
+      "then": {
+        "degree_satisfaction": "terribly"
+      }
+    },
+    {
+      "if": {
+        "financing": "not_enough",
+        "criminal": "low",
+        "vvp": "average"
+      },
+      "then": {
+        "degree_satisfaction": "satisfactory"
+      }
+    },
+    {
+      "if": {
+        "financing": "very_good",
+        "criminal": "low",
+        "vvp": "low"
+      },
+      "then": {
+        "degree_satisfaction": "satisfactory"
+      }
+    },
+    {
+      "if": {
+        "financing": "very_good",
+        "criminal": "low",
+        "vvp": "very_high"
+      },
+      "then": {
+        "degree_satisfaction": "very_good"
+      }
+    },
+    {
+      "if": {
+        "financing": "very_good",
+        "criminal": "very_high",
+        "vvp": "very_high"
+      },
+      "then": {
+        "degree_satisfaction": "bad"
+      }
+    },
+    {
+      "if": {
+        "financing": "little",
+        "criminal": "high",
+        "vvp": "very_high"
+      },
+      "then": {
+        "degree_satisfaction": "very_good"
+      }
+    }
+  ]
+}

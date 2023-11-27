@@ -1,9 +1,9 @@
 <template>
-  <main>
+  <main class="border">
     <h1>Лабораторная работа №3</h1>
     <div v-if="type==='one'">
       <select v-model="selectDefinitions" name="one" id="one">
-        <option disabled selected value="">Выберите уровень финансирования</option>
+        <option disabled selected value="">Выберите уровень бюджета</option>
         <option v-for="(d,index) in input.financing?.definitions" :value="index">{{d.name}}</option>
       </select>
     </div>
@@ -35,19 +35,19 @@
     </div>
     <button class="result-btn" @click="calc()">Рассчиать</button>
     <div class="result">
-      <h3 v-if="res>0">Уровень удволетворённости населения</h3>
+      <h3 v-if="res>0">Уровень удволетворённости заказчика</h3>
       <p v-if="res>0">{{Math.round( res *100)/100}}</p>
     </div>
     <div v-if="type === 'one'" class="edit">
       <p>Добавить правило</p>
-      ЕСЛИ Финансирование =
+      ЕСЛИ Бюджет =
       <select v-model="add_rules.if" name="one-edit-financing" id="one-edit-financing">
-        <option disabled selected value="">Выберите уровень финансирования</option>
+        <option disabled selected value="">Выберите уровень Бюджет</option>
         <option v-for="(d,index) in input.financing?.definitions" :value="index">{{d.name}}</option>
       </select>
-      ТО уровень удволетворённости населения =
+      ТО уровень удволетворённости заказчика =
       <select v-model="add_rules.then" name="one-edit-degree" id="one-edit-degree">
-        <option disabled selected value="">Выберите уровень удволетворённости населения</option>
+        <option disabled selected value="">Выберите уровень удволетворённости заказчика</option>
         <option v-for="(d,index) in input.degree_satisfaction?.definitions" :value="index">{{d.name}}</option>
       </select> <br>
       <button class="add-rules" @click="addRules()">Добавить</button>
@@ -62,27 +62,27 @@
           <option :for="i" v-for="(d,index) in set" :value="d.en_name">{{d.name}}</option>
         </select>
       </div>
-      ТО Уровень удволетворённости населения = <select v-model="add_rules.then" name="one-edit-degree" id="one-edit-degree">
-      <option disabled selected value="">Выберите уровень удволетворённости населения</option>
+      ТО Уровень удволетворённости заказчика = <select v-model="add_rules.then" name="one-edit-degree" id="one-edit-degree">
+      <option disabled selected value="">Выберите уровень удволетворённости заказчика</option>
       <option v-for="(d,index) in degree_satisfaction.definitions" :value="index">{{d.name}}</option>
     </select> <br>
       <button class="add-rules" @click="addRules()">Добавить</button>
     </div>
     <div v-if="type==='one'" class="rules">
-      <div  v-for="(rule,i) in rules" ><p>ЕСЛИ Уровень финансирования = {{input.financing.definitions[rule.if.financing].name}} ТО Уровень удволетворённости населения = {{input.degree_satisfaction.definitions[rule.then.degree_satisfaction].name}}</p> <button @click="deleteRules(i)">Удалить</button></div>
+      <div  v-for="(rule,i) in rules" ><p>ЕСЛИ Уровень бюджет = {{input.financing.definitions[rule.if.financing].name}} ТО Уровень удволетворённости заказчика = {{input.degree_satisfaction.definitions[rule.then.degree_satisfaction].name}}</p> <button @click="deleteRules(i)">Удалить</button></div>
     </div>
     <div v-else class="rules">
       <div  v-for="(rule,i) in rules" ><p> ЕСЛИ <span v-if="inputClear?.input" v-for="(set,key,i) in rule.if">{{inputClear?.input[key]?.name}} = {{inputClear?.input[key].definitions[set].name}} {{i === Object.keys(rule.if).length-1?' ':'И'}} </span> ТО <span v-if="inputClear" v-for="(set,key,i) in rule.then">{{inputClear[key]?.name}} = {{inputClear[key].definitions[set].name}} </span>  </p> <button @click="deleteRules(i)">Удалить</button></div>
     </div>
     <div v-if="type==='one'" class="data">
       <div>
-        <p>Финансирование</p>
+        <p>Бюджет</p>
         {{input?.financing?.value}}
         <p v-for="el in input?.financing?.definitions">{{el.name}} – {{el.value}}</p>
       </div>
       <div>
         <div>
-          <p>Уровень удволетворённости населения</p>
+          <p>Уровень удволетворённости заказчика</p>
           {{input?.degree_satisfaction?.value}}
           <p v-for="el in input?.degree_satisfaction?.definitions">{{el.name}} – {{el.value}}</p>
         </div>
@@ -133,13 +133,13 @@ export default {
   watch:{
     async type(){
       if(this.type==='one'){
-          this.fuzzy='Mamdani'
-          this.algorithm="individual"
-          this.selectDefinitions=''
-          this.type='one'
-          this.res=''
-          this.input={}
-          this.rules={}
+        this.fuzzy='Mamdani'
+        this.algorithm="individual"
+        this.selectDefinitions=''
+        this.type='one'
+        this.res=''
+        this.input={}
+        this.rules={}
         await this.getAll()
       }
       else{
@@ -218,23 +218,32 @@ export default {
 </script>
 <style>
 *{
-  font-family: "Helvetica Neue";
+  font-family: 'Consolas';
+  font-weight: bold;
   padding: 0;
   margin: 0;
   border: none;
   outline: none;
+
+  font-size: 1rem;
 }
 body{
-  min-width: 100vw;
-  min-height: 100vh;
-  background-color: #a4ffa4;
+  min-width: 98vw;
+  min-height: 93vh;
+  background-color: #1d3557;
 }
 main{
   width: fit-content;
   margin: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  border: 1px solid #14213d;
+  padding: 15px;
+  border-radius: 15px;
+  background: #14213d;
+  color: #c2c2d3;
 }
 main >div{
   margin-top: 20px;
@@ -243,11 +252,24 @@ main >div{
   font-size: 2rem;
   width: 100%;
   text-align: center;
+  border-radius: 15px;
+  border: 1px solid black;
+  color: white;
+  background: #14213d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
 }
 .result-btn{
   width: 100%;
   padding: 4px 0;
   margin: 10px 0;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 15px;
+  background: #e5e5e5;
+  color: #14213d;
 }
 .multiple-select{
   margin: 0 4px;
@@ -255,7 +277,7 @@ main >div{
 .edit{
   width: 100%;
   padding: 10px;
-  border-top: 1px #131313 solid;
+  border-top: 1px #ffffff solid;
 }
 .edit > p{
   width: 100%;
@@ -268,6 +290,11 @@ button.add-rules{
   width: 100%;
   padding: 4px 0;
   margin-top: 16px;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 15px;
+  background: #e5e5e5;
+  color: #14213d;
 }
 .rules div{
   display: flex;
@@ -279,5 +306,9 @@ button.add-rules{
   display: flex;
   gap: 40px;
   justify-content: center;
+  border-top: 1px solid #e5e5e5;
+}
+select {
+
 }
 </style>
